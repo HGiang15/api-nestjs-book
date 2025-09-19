@@ -1,21 +1,24 @@
-// import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Category } from '../schemas/book.schema';
 
 export class CreateBookDto {
-  //   @IsString()
-  //   @IsNotEmpty()
+  @IsNotEmpty()
+  @IsString()
   readonly title: string;
 
+  @IsNotEmpty()
+  @IsString()
+  @IsOptional()
   readonly description: string;
 
-  //   @IsNotEmpty()
+  @IsNotEmpty()
+  @IsString()
   readonly author: string;
 
-  //   @IsNotEmpty()
+  @IsNotEmpty()
+  @IsString()
   readonly price: number;
 
-  //   @IsEnum(['ADVENTURE', 'CLASSICS', 'CRIME', 'FANTASY'], {
-  //     message: 'Valid category required',
-  //   })
+  @IsEnum(Category, { message: 'Please enter correct category' })
   readonly category: Category;
 }
