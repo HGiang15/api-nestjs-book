@@ -7,6 +7,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Book } from './schemas/book.schema';
 import * as mongoose from 'mongoose';
 import { UpdateBookDto } from './dto/update-book.dto';
+import { ListBookDto } from './dto/list-book.dto';
+import { User } from 'src/auth/schemas/user.schema';
 
 @Injectable()
 export class BookService {
@@ -15,13 +17,48 @@ export class BookService {
     private bookModel: mongoose.Model<Book>,
   ) {}
 
-  async findAll(): Promise<Book[]> {
-    const books = await this.bookModel.find();
-    return books;
+  async findAll(request: ListBookDto): Promise<any> {
+    const { page, pageSize, keyword } = request;
+    const query: any = {};
+
+    if (keyword) query.$or = [{ title: { $regex: keyword, $options: 'i' } }];
+    const [items, total] = await Promise.all([
+      this.bookModel.aggregate([
+        {
+          $match: query,
+        },
+        { $sort: { createdAt: -1 } },
+        { $skip: (page - 1) * pageSize },
+        { $limit: pageSize },
+        {
+          $project: {
+            _id: 1,
+            title: 1,
+            author: 1,
+            price: 1,
+            category: 1,
+            createdAt: 1,
+            updatedAt: 1,
+          },
+        },
+      ]),
+
+      this.bookModel.countDocuments(query),
+    ]);
+
+    return {
+      items,
+      pagination: {
+        total: total,
+        currentPage: page,
+      },
+    };
   }
 
-  async create(book: Book): Promise<Book> {
-    const res = await this.bookModel.create(book);
+  async create(book: Book, user: User): Promise<Book> {
+    const data = Object.assign(book, { user: user._id });
+
+    const res = await this.bookModel.create(data);
     return res;
   }
 
