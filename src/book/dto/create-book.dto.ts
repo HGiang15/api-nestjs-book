@@ -5,9 +5,9 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { Category } from '../schemas/book.schema';
 import { User } from 'src/auth/schemas/user.schema';
 import { ApiProperty } from '@nestjs/swagger';
+import { Category } from '../enums/book.enum';
 
 export class CreateBookDto {
   @ApiProperty({ example: 'Lập trình NestJS', description: 'Tiêu đề sách' })

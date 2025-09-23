@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Category } from '../schemas/book.schema';
+import { Category } from '../enums/book.enum';
 
 export class BookResponseDto {
   @ApiProperty({

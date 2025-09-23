@@ -1,13 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { User } from 'src/auth/schemas/user.schema';
-
-export enum Category {
-  ADVENTURE = 'Adventure',
-  CLASSICS = 'Classics',
-  CRIME = 'Crime',
-  FANTASY = 'Fantasy',
-}
+import { Category } from '../enums/book.enum';
 
 @Schema({
   timestamps: true,
