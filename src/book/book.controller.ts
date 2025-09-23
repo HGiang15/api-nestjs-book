@@ -16,6 +16,9 @@ import { UpdateBookDto } from './dto/update-book.dto';
 import { ListBookDto } from './dto/list-book.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { BookResponseDto } from './dto/book-response.dto';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { Role } from 'src/auth/enums/role.enum';
+import { RolesGuard } from 'src/auth/guards/roles.guards';
 
 @ApiTags('Books')
 @Controller('books')
@@ -24,6 +27,8 @@ export class BookController {
 
   @Post('get-page-list')
   @ApiResponse({ status: 200, type: [BookResponseDto] })
+  @Roles(Role.Moderator, Role.Admin)
+  @UseGuards(AuthGuard(), RolesGuard)
   async getAllBooks(@Body() request: ListBookDto): Promise<Book[]> {
     return this.bookService.findAll(request);
   }
