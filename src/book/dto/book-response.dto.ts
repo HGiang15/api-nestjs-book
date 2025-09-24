@@ -26,6 +26,9 @@ export class BookResponseDto {
   @ApiProperty({ example: '66f2bca9001', description: 'ID user tạo sách' })
   readonly user: string;
 
+  @ApiProperty({ example: 'https://example.com/book.jpg' })
+  readonly image: string;
+
   @ApiProperty({ example: '2025-09-21T12:00:00Z' })
   readonly createdAt: Date;
 

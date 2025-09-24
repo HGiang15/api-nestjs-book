@@ -1,6 +1,8 @@
 import {
+  IsArray,
   IsEmpty,
   IsEnum,
+  IsMongoId,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -23,12 +25,22 @@ export class CreateBookDto {
 
   @ApiProperty({ example: 'Giang Hoàng' })
   @IsNotEmpty()
-  @IsString()
-  readonly author: string;
+  @IsMongoId()
+  readonly authorId: string;
 
   @ApiProperty({ example: 150000, description: 'Giá sách' })
   @IsNotEmpty()
   readonly price: number;
+
+  @ApiProperty({
+    example: ['https://example.com/1.jpg', 'https://example.com/2.jpg'],
+    required: false,
+    type: [String],
+  })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true }) // mỗi phần tử trong array phải là string
+  readonly images?: string[];
 
   @ApiProperty({ enum: Category, example: Category.ADVENTURE })
   @IsEnum(Category, { message: 'Please enter correct category' })

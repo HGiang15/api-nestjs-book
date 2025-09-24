@@ -7,4 +7,5 @@ export enum Category {
   FICTION = 'Fiction', //Viễn tưởng
   SCIENCE = 'Science', // Khoa học
   POLITICS = 'Politics', // Chính trị
+  SPORTS = 'Sports', // Thể thao
 }

@@ -9,6 +9,7 @@ import * as mongoose from 'mongoose';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { ListBookDto } from './dto/list-book.dto';
 import { User } from 'src/auth/schemas/user.schema';
+import { CreateBookDto } from './dto/create-book.dto';
 
 @Injectable()
 export class BookService {
@@ -55,10 +56,24 @@ export class BookService {
     };
   }
 
-  async create(book: Book, user: User): Promise<Book> {
-    const data = Object.assign(book, { user: user._id });
+  async create(book: CreateBookDto, user: User): Promise<Book> {
+    const data = {
+      title: book.title,
+      description: book.description,
+      author: book.authorId,
+      price: book.price,
+      category: book.category,
+      user: user._id,
+      images: book.images,
+    };
 
-    const res = await this.bookModel.create(data);
+    const createdBook = await this.bookModel.create(data);
+
+    const res = await this.bookModel
+      .findById(createdBook._id)
+      .populate('author', 'name email gender')
+      .exec();
+
     return res;
   }
 
@@ -69,7 +84,10 @@ export class BookService {
       throw new BadRequestException('Please enter correct id!');
     }
 
-    const book = await this.bookModel.findById(id);
+    const book = await this.bookModel
+      .findById(id)
+      .populate('author', '-createdAt -updatedAt')
+      .exec();
 
     if (!book) {
       throw new NotFoundException('Book not found!');

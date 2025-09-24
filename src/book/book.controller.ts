@@ -45,7 +45,7 @@ export class BookController {
     return this.bookService.create(book, req.user);
   }
 
-  @Get(':id')
+  @Get('get-detail/:id')
   @ApiResponse({ status: 200, type: BookResponseDto })
   async getBook(
     @Param('id')
@@ -64,7 +64,7 @@ export class BookController {
     return this.bookService.updateById(book);
   }
 
-  @Delete(':id')
+  @Delete('delete/:id')
   @ApiResponse({ status: 200, description: 'Xóa thành công' })
   async deleteBook(
     @Param('id')
