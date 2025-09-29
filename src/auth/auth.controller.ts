@@ -33,4 +33,19 @@ export class AuthController {
   login(@Body() loginDto: LoginDto): Promise<{ token: string }> {
     return this.authService.login(loginDto);
   }
+
+  @Post('refresh-token')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        userId: { type: 'string' },
+        refreshToken: { type: 'string' },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'New access token generated' })
+  refresh(@Body() body: { userId: string; refreshToken: string }) {
+    return this.authService.refreshToken(body.userId, body.refreshToken);
+  }
 }
